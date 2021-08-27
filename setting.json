@@ -1,0 +1,26 @@
+{
+  "debug": true,
+  "server": {
+    "port": "5000"
+  },
+  "database": {
+    "mariaDB" : {
+      "host": "127.0.0.1",
+      "port": "3306",
+      "user": "root",
+      "password": "qwe1212",
+      "database": "iam"
+    },
+    "redis" : {
+      "host": "127.0.0.1",
+      "port": "6379",
+      "password": "",
+      "database":       0
+    }
+  },
+  "token": {
+    "ACCESS_SECRET": "CODEING",
+    "REFRESH_SECRET": "CODEING"
+  }
+}
+
