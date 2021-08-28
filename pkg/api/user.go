@@ -33,10 +33,53 @@ func (i *IamServer) GetUserById(ctx echo.Context, id string, params GetUserByIdP
 	return nil
 }
 
+func (i *IamServer)	UpdateUser(ctx echo.Context, id string, params UpdateUserParams) error {
+
+	err := verifyToken(common.Cnf.Token.AccessSecret,params.AccessToken,id)
+	if err != nil {
+		return sendCreateTokenError(ctx, http.StatusForbidden, "Invalid Access token for Update user")
+	}
+
+	user , err := getUser(id)
+	if user == nil {
+		return sendCreateTokenError(ctx, http.StatusNotFound, "Not found user")
+	}
+
+	var target User
+	err = ctx.Bind(&target)
+	if err != nil {
+		return sendCreateTokenError(ctx, http.StatusBadRequest, "Invalid format for update User")
+	}
+	err = updateUser(user,&target)
+	if err != nil {
+		return sendCreateTokenError(ctx, http.StatusBadRequest, "Cannot update user")
+	}
+
+	err = ctx.JSON(http.StatusOK, user)
+	if err != nil {
+		return sendCreateTokenError(ctx, http.StatusBadRequest, err.Error())
+	}
+	return nil
+}
+
 // (DELETE /users)
-func (i *IamServer) DeleteUserById(ctx echo.Context, id string) error {
+func (i *IamServer) DeleteUserById(ctx echo.Context, id string, params DeleteUserByIdParams) error{
 
+	err := verifyToken(common.Cnf.Token.AccessSecret,params.AccessToken,id)
+	if err != nil {
+		return sendCreateTokenError(ctx, http.StatusForbidden, "Invalid Access token for Delete User")
+	}
 
+	err = deleteUser(id)
+	if err != nil {
+		return sendCreateTokenError(ctx, http.StatusNotFound, "Invalid format for Delete User")
+	}
+
+	err = ctx.JSON(http.StatusOK, id)
+	if err != nil {
+		// Something really bad happened, tell Echo that our handler failed
+		return sendCreateTokenError(ctx, http.StatusBadRequest, "Bad request for Delete User")
+	}
 	return nil
 }
 
@@ -68,7 +111,7 @@ func (i *IamServer) PostUsers(ctx echo.Context) error {
 func getUser(userId string)  (*User,error) {
 	db := GetDB()
 	user := &User{}
-	err := db.Transaction(func(tx *gorm.DB) error {
+	return user,db.Transaction(func(tx *gorm.DB) error {
 		if err := db.First(&user, "id = ?", userId).Error; err != nil {
 			return err
 		}
@@ -78,11 +121,6 @@ func getUser(userId string)  (*User,error) {
 		user.Password = ""
 		return nil
 	})
-
-	if err != nil {
-		return  nil,err
-	}
-	return user,nil
 }
 
 func verifyUser(user *User)  error {
@@ -134,6 +172,50 @@ func createUser(user *User)  (string,error) {
 		return "", err
 	}
 	return *newUUID,nil
+}
+
+func updateUser(user *User, targetUser *User) error {
+
+	err := updateUserData(user,targetUser)
+	if err != nil {
+		return err
+	}
+	db := GetDB()
+	return db.Transaction(func(tx *gorm.DB) error {
+		if err := db.Save(user).Error; err != nil{
+			return err
+		}
+		return nil
+	})
+}
+
+
+func updateUserData(user *User, targetUser *User) error {
+
+	if targetUser.Email != "" {
+		user.Email = targetUser.Email
+	}
+	if targetUser.Password != "" {
+		hashedPassword, err := createHashedPassword(targetUser.Password)
+		if err!= nil{
+			return err
+		}
+		user.Password = hashedPassword
+	}
+	if targetUser.NickName != nil {
+		user.NickName = targetUser.NickName
+	}
+	return nil
+}
+
+func deleteUser(userId string) error {
+	db := GetDB()
+	return db.Transaction(func(tx *gorm.DB) error {
+		if err := db.Where("id = ?",userId).Delete(&User{}).Error; err != nil{
+			return err
+		}
+		return nil
+	})
 }
 
 func createHashedPassword(plainPassword string)  (string,error){

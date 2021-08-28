@@ -54,8 +54,21 @@ type GetTokenParams struct {
 // PostUsersJSONBody defines parameters for PostUsers.
 type PostUsersJSONBody User
 
+// DeleteUserByIdParams defines parameters for DeleteUserById.
+type DeleteUserByIdParams struct {
+	AccessToken string `json:"Access-token"`
+}
+
 // GetUserByIdParams defines parameters for GetUserById.
 type GetUserByIdParams struct {
+	AccessToken string `json:"Access-token"`
+}
+
+// UpdateUserJSONBody defines parameters for UpdateUser.
+type UpdateUserJSONBody User
+
+// UpdateUserParams defines parameters for UpdateUser.
+type UpdateUserParams struct {
 	AccessToken string `json:"Access-token"`
 }
 
@@ -64,3 +77,6 @@ type CreateTokenJSONRequestBody CreateTokenJSONBody
 
 // PostUsersJSONRequestBody defines body for PostUsers for application/json ContentType.
 type PostUsersJSONRequestBody PostUsersJSONBody
+
+// UpdateUserJSONRequestBody defines body for UpdateUser for application/json ContentType.
+type UpdateUserJSONRequestBody UpdateUserJSONBody

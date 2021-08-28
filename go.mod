@@ -4,11 +4,11 @@ go 1.16
 
 require (
 	github.com/deepmap/oapi-codegen v1.8.2
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/getkin/kin-openapi v0.61.0
 	github.com/go-openapi/swag v0.19.14 // indirect
 	github.com/go-redis/redis v6.15.9+incompatible
-	github.com/google/uuid v1.3.0 // indirect
+	github.com/google/uuid v1.3.0
 	github.com/jinzhu/gorm v1.9.16
 	github.com/labstack/echo/v4 v4.2.1
 	github.com/onsi/gomega v1.16.0 // indirect

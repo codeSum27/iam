@@ -11,6 +11,48 @@ info:
 
 paths:
   /users/{id}:
+    put:
+      tags:
+        - Users
+      description: |
+        Update User data
+      operationId: updateUser
+      parameters:
+        - in: header
+          required: true
+          name: Access-token
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Optional description in *Markdown*
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Update User
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '403':
+          description: Invalid authorization for update user
+        '404':
+          description: User not found
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     get:
       tags:
         - Users
@@ -36,6 +78,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        '403':
+          description: Invalid authorization for get user
+        '404':
+          description: User not found
         default:
           description: unexpected error
           content:
@@ -49,6 +95,11 @@ paths:
         Delete User
       operationId: deleteUserById
       parameters:
+        - in: header
+          required: true
+          name: Access-token
+          schema:
+            type: string
         - name: id
           in: path
           description: User ID
@@ -58,6 +109,10 @@ paths:
       responses:
         '200':
           description: User Deleted
+        '403':
+          description: Invalid authorization for delete user
+        '404':
+          description: User not found
         default:
           description: unexpected error
           content:
@@ -101,7 +156,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/User'
-
       responses:
         '201':
           description: Token Created
@@ -109,6 +163,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Token'
+        '403':
+          description: Invalid authorization for create token
+        '404':
+          description: User not found
         default:
           description: unexpected error
           content:
@@ -137,6 +195,23 @@ paths:
           required: true
           schema:
             type: string
+      responses:
+        '200':
+          description: Token Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '403':
+          description: Invalid authorization for get token
+        '404':
+          description: Token not found
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
     User:
@@ -176,7 +251,6 @@ components:
         refresh_token:
           type: string
           description: Refresh Token for access token
-
     Error:
       type: object
       required:
