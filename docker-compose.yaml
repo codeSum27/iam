@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  db:
+    container_name: mariadb-server
+    image: mariadb:10.5.8-focal
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: qwe1212
+    ports:
+      - 3306:3306
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+
+  redis:
+    image: redis:6.0.12
+    restart: always
+    ports:
+      - 6379:6379
