@@ -72,14 +72,14 @@ func generateJWT(user *User) (*Token, error) {
 	tokenExpiredAt := time.Now().Add(time.Minute * 30).Unix()
 	refreshTokenExpiredAt := time.Now().Add(time.Minute * 30).Unix()
 
-	token := jwt.New(jwt.SigningMethodHS256)
-	claims := token.Claims.(jwt.MapClaims)
-
+	claims := jwt.MapClaims{}
 	claims["authorized"] = true
 	claims["id"] = user.Id
+	claims["email"] = user.Email
 	claims["exp"] = tokenExpiredAt
 
-	tokenString, err := token.SignedString(mySigningKey)
+  at := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+  tokenString, err := at.SignedString(mySigningKey)
 	tokenType := "jwt"
 
 	var mySigningRefreshKey = []byte(common.Cnf.Token.RefreshSecret)
