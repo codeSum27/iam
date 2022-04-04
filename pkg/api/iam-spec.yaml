@@ -1,256 +1,137 @@
-openapi: "3.0.0"
+openapi: 3.1.0
 info:
-  version: 1.0.2
+  version: 2.0.0
   title: CodeSum iam
-  description: CodeSum iam service for User Authentication
-  contact:
-    name: Codesum
+  description: 'This service provides authentication and authorization for user'
   license:
-    name: Apache 2.0
+    name: Apache-2.0 License
     url: https://www.apache.org/licenses/LICENSE-2.0.html
 
-paths:
-  /users/{id}:
-    put:
-      tags:
-        - Users
-      description: |
-        Update User data
-      operationId: updateUser
-      parameters:
-        - in: header
-          required: true
-          name: Access-token
-          schema:
-            type: string
-        - name: id
-          in: path
-          description: User ID
-          required: true
-          schema:
-            type: string
-      requestBody:
-        description: Optional description in *Markdown*
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/User'
-      responses:
-        '200':
-          description: Update User
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        '403':
-          description: Invalid authorization for update user
-        '404':
-          description: User not found
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-    get:
-      tags:
-        - Users
-      description: |
-        Get User
-      operationId: getUserById
-      parameters:
-        - in: header
-          required: true
-          name: Access-token
-          schema:
-            type: string
-        - name: id
-          in: path
-          description: User ID
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Find User
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        '403':
-          description: Invalid authorization for get user
-        '404':
-          description: User not found
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-    delete:
-      tags:
-        - Users
-      description: |
-        Delete User
-      operationId: deleteUserById
-      parameters:
-        - in: header
-          required: true
-          name: Access-token
-          schema:
-            type: string
-        - name: id
-          in: path
-          description: User ID
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: User Deleted
-        '403':
-          description: Invalid authorization for delete user
-        '404':
-          description: User not found
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-  /users:
-    post:
-      tags:
-        - Users
-      description: |
-        Create User
-      requestBody:
-        description: Optional description in *Markdown*
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/User'
-      responses:
-        '201':
-          description: User Created
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/ac2dia/Codesum/2.0.0
+  - url: http://api.example.com/v2
 
-  /tokens:
-    post:
-      tags:
-        - Token
-      description: |
-        Return token
-      operationId: CreateToken
-      requestBody:
-        description: Optional description in *Markdown*
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/User'
-      responses:
-        '201':
-          description: Token Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Token'
-        '403':
-          description: Invalid authorization for create token
-        '404':
-          description: User not found
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-  /tokens/{id}:
-    get:
-      tags:
-        - Token
-      description: |
-        Verify User's token
-      operationId: getToken
-      parameters:
-        - in: header
-          name: Access-token
-          schema:
-            type: string
-        - in: header
-          name: Refresh-token
-          schema:
-            type: string
-        - name: id
-          in: path
-          description: User ID
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Token Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Token'
-        '403':
-          description: Invalid authorization for get token
-        '404':
-          description: Token not found
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+tags:
+  - name: user
+    description: user
+  - name: role
+    description: role
+  - name: token
+    description: token
+
 components:
   schemas:
     User:
       type: object
       required:
-        - email
+        - id
+        - username
         - password
+        - name
+        - email
       properties:
         id:
           type: string
-          description: UUID for user
-        nickName:
+          format: uuid
+          example: d4ea0b24-8808-48d3-b69e-48c6559e55e4
+        username:
           type: string
-          description: Nickname of user
-        email:
-          type: string
-          description: Email for user
+          example: ac2dia
         password:
           type: string
-          description: Password for user
-
+          format: password
+          example: 449332499bdbf04493dfca254492161e1b751e7f5ac7ee560801409a9ddf3f5f
+        name:
+          type: string
+          example: SeungHun Lee
+        email:
+          type: string
+          format: email
+          example: ac2dia@gmail.com
+        enabled:
+          type: boolean
+          default: true
+          example: true
+        login_fail_count:
+          type: integer
+          default: 0
+          example: 5
+        password_changed_at:
+          type: string
+          format: date-time
+          example:
+        last_login_at:
+          type: string
+          format: date-time
+          example:
+        created_at:
+          type: string
+          format: date-time
+          example:
+        updated_at:
+          type: string
+          format: date-time
+          example:
+    Role:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: aa649832-b903-425a-aac8-843b2e8fa563
+        name:
+          type: string
+          example: ROLE_ADMIN
+    UserRole:
+      type: object
+      required:
+        - id
+        - user_id
+        - role_id
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: b2ec1f52-7e24-42c6-acd1-19bcee553b10
+        user_id:
+          type: string
+          format: uuid
+          example: d4ea0b24-8808-48d3-b69e-48c6559e55e4
+        role_id:
+          type: string
+          format: uuid
+          example: aa649832-b903-425a-aac8-843b2e8fa563
+        created_at:
+          type: string
+          format: date-time
+          example:
+        updated_at:
+          type: string
+          format: date-time
+          example:
     Token:
       type: object
+      required:
+        - access_token
+        - refresh_token
       properties:
         access_token:
           type: string
-          description: Access Token for user
+          example: MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3
         token_type:
           type: string
-          description: Type of access_token.
-        expires_at:
+          example: Bearer
+        expires_in:
           type: integer
-          description: Expire time
-        refresh_at:
-          type: integer
-          description: Expire time
+          example: 600
         refresh_token:
           type: string
-          description: Refresh Token for access token
+          example: IwOGYzYTlmM2YxOTQ5MGE3YmNmMDFkNTVk
     Error:
       type: object
       required:
@@ -260,5 +141,7 @@ components:
         code:
           type: integer
           format: int32
+          example: 404
         message:
           type: string
+          example: page not found

@@ -1,6 +1,6 @@
-FROM golang:1.16
+FROM golang:1.18
 
-WORKDIR /go/src/github.com/codeSum27/iam
+WORKDIR /go/src/github.com/ac2dia/iam
 COPY . .
 RUN go build -o iam main.go
 
