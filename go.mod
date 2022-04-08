@@ -1,4 +1,4 @@
-module github.com/ac2dia/iam
+module github.com/codeSum27/iam
 
 go 1.18
 
