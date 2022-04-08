@@ -26,7 +26,7 @@ func main() {
 	swagger.Servers = nil
 
 	// Create an instance of our handler which satisfies the generated interface
-	iam := api.NewIamServer()
+	IamServer := api.NewIamServer()
 
 	// This is how you set up a basic Echo router
 	e := echo.New()
@@ -37,7 +37,7 @@ func main() {
 	e.Use(middleware.OapiRequestValidator(swagger))
 
 	// We now register our iam above as the handler for the interface
-	api.RegisterHandlers(e, iam)
+	api.RegisterHandlers(e, IamServer)
 
 	// And we serve HTTP until the world ends.
 	e.Logger.Fatal(e.Start(fmt.Sprintf("0.0.0.0:%d", *port)))
