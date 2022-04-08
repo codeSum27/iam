@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/ac2dia/iam/pkg/api"
@@ -32,6 +33,12 @@ func main() {
 	e := echo.New()
 	// Log all requests
 	e.Use(echomiddleware.Logger())
+	// Allow CORS With Config
+	e.Use(echomiddleware.CORSWithConfig(echomiddleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{http.MethodPost, http.MethodGet, http.MethodPut, http.MethodDelete},
+	}))
+
 	// Use our validation middleware to check all requests against the
 	// OpenAPI schema.
 	e.Use(middleware.OapiRequestValidator(swagger))
