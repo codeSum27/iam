@@ -1,0 +1,264 @@
+openapi: 3.0.0
+info:
+  version: 2.0.0
+  title: CodeSum iam
+  description: 'This service provides authentication and authorization for user'
+  license:
+    name: Apache-2.0 License
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/ac2dia/Codesum/2.0.0
+  - url: http://api.example.com/v2
+
+tags:
+  - name: user
+    description: user
+  - name: auth
+    description: auth
+
+paths:
+  /auth/signup:
+    post:
+      tags:
+        - auth
+      summary: SignUp User
+      description: >
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSignup'
+      responses:
+        '201':
+          description: SignUp User Successed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: Login User
+      description: >
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+      responses:
+        '200':
+          description: Login User Successed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+  /auth/logout:
+    post:
+      tags:
+        - auth
+      summary: Logout User
+      description: >
+      responses:
+        '204':
+          description: Logout User Successed
+  /users:
+    get:
+      tags:
+        - user
+      summary: Get Users
+      description: >
+      responses:
+        '200':
+          description: Get Users Successed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+  /users/{id}:
+    get:
+      tags:
+        - user
+      summary: Get User
+      description: >
+      operationId: getUserById
+      parameters:
+        - name: id
+          in: path
+          description: User Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Get User Successed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+    put:
+      tags:
+        - user
+      summary: Update User
+      description: >
+      operationId: updateUserById
+      parameters:
+        - name: id
+          in: path
+          description: User Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Update User Successed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+    delete:
+      tags:
+        - user
+      summary: Delete User
+      description: >
+      operationId: deleteUserById
+      parameters:
+        - name: id
+          in: path
+          description: User Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Delete User Successed
+
+components:
+  schemas:
+    UserSignup:
+      type: object
+      required:
+        - id
+        - username
+        - password
+        - name
+        - email
+        - role_name
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d4ea0b24-8808-48d3-b69e-48c6559e55e4
+        username:
+          type: string
+          example: ac2dia
+        password:
+          type: string
+          format: password
+          example: 449332499bdbf04493dfca254492161e1b751e7f5ac7ee560801409a9ddf3f5f
+        name:
+          type: string
+          example: SeungHun Lee
+        email:
+          type: string
+          format: email
+          example: ac2dia@gmail.com
+        role_name:
+          type: string
+          example: ROLE_ADMIN
+    UserLogin:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          example: ac2dia
+        password:
+          type: string
+          format: password
+          example: 449332499bdbf04493dfca254492161e1b751e7f5ac7ee560801409a9ddf3f5f
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d4ea0b24-8808-48d3-b69e-48c6559e55e4
+        username:
+          type: string
+          example: ac2dia
+        password:
+          type: string
+          format: password
+          example: 449332499bdbf04493dfca254492161e1b751e7f5ac7ee560801409a9ddf3f5f
+        name:
+          type: string
+          example: SeungHun Lee
+        email:
+          type: string
+          format: email
+          example: ac2dia@gmail.com
+        enabled:
+          type: boolean
+          default: true
+          example: true
+        role_name:
+          type: string
+          example: ROLE_ADMIN
+        login_fail_count:
+          type: integer
+          default: 0
+          example: 5
+        password_changed_at:
+          type: string
+          format: date-time
+          example: ''
+        last_login_at:
+          type: string
+          format: date-time
+          example: 2022-04-09 00:45:00
+        created_at:
+          type: string
+          format: date-time
+          example: 2022-04-09 00:40:00
+        updated_at:
+          type: string
+          format: date-time
+          example: ''
+    TokenResponse:
+      type: object
+      required:
+        - access_token
+      properties:
+        access_token:
+          type: string
+          example: MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3
+        token_type:
+          type: string
+          example: Bearer
+        expires_in:
+          type: integer
+          example: 600
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 404
+        message:
+          type: string
+          example: page not found
