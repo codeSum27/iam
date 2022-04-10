@@ -3,7 +3,7 @@ version: '3'
 services:
   db:
     container_name: codesum-mariadb
-    image: mariadb:10.5.8-focal
+    image: mariadb:10.5-focal
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: 'qwe1212!Q'
@@ -17,7 +17,8 @@ services:
       ]
 
   redis:
-    image: redis:6.0.12
+    container_name: codesum-redis
+    image: redis:6.0-alpine
     restart: always
     ports:
       - 6379:6379
