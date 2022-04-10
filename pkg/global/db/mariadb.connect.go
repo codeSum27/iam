@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/codeSum27/iam/pkg/api"
+	"github.com/codeSum27/iam/pkg/model"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -20,7 +20,7 @@ func DBInit() {
 
     gGormDB = db
 
-    err = db.AutoMigrate(&api.User{})
+    err = db.AutoMigrate(&model.User{})
     if err != nil {
         panic(err.Error())
     }
