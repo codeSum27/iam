@@ -7,12 +7,24 @@ import (
 	"os"
 
 	"github.com/codeSum27/iam/pkg/api"
+	"github.com/codeSum27/iam/pkg/global/db"
 	"github.com/deepmap/oapi-codegen/pkg/middleware"
 	"github.com/labstack/echo/v4"
 	echomiddleware "github.com/labstack/echo/v4/middleware"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	fmt.Println("Loading .env file")
+    err := godotenv.Load(".env")
+	if err != nil {
+		panic(err.Error())
+	}
+
+	db.DBInit()
+	// db.RedisInit()
+
 	var port = flag.Int("port", 5000, "Port for test HTTP server")
 	flag.Parse()
 
