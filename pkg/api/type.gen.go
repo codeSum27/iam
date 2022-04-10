@@ -41,7 +41,7 @@ type UserResponse struct {
 // UserSignup defines model for UserSignup.
 type UserSignup struct {
 	Email    openapi_types.Email `json:"email"`
-	Id       string              `json:"id"`
+	Id       *string             `json:"id,omitempty"`
 	Name     string              `json:"name"`
 	Password string              `json:"password"`
 	RoleName string              `json:"role_name"`
