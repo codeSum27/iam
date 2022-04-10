@@ -146,7 +146,6 @@ components:
     UserSignup:
       type: object
       required:
-        - id
         - username
         - password
         - name
