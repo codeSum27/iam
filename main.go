@@ -23,7 +23,7 @@ func main() {
 	}
 
 	db.DBInit()
-	// db.RedisInit()
+	db.RedisInit()
 
 	var port = flag.Int("port", 5000, "Port for test HTTP server")
 	flag.Parse()
